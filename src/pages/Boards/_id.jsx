@@ -1,7 +1,6 @@
 import Container from '@mui/material/Container'
-import AppBar from '../../components/AppBar'
-import Box from '@mui/material/Box'
-import BoardBar from './BoardBar'
+import AppBar from '~/components/AppBar'
+import BoardBar from './BoardBar' //flexible relative import
 import BoardContent from './BoardContent'
 
 const Board = () => {
