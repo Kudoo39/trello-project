@@ -1,5 +1,5 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
-import { orange, pink } from '@mui/material/colors'
+import { blue, cyan, orange, pink } from '@mui/material/colors'
 
 const theme = extendTheme({
   trello: {
@@ -9,16 +9,50 @@ const theme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        // primary: {
-        //   main: orange[200]
-        // }
+        primary: blue,
+        secondary: pink
       }
     },
     dark: {
       palette: {
-        // primary: {
-        //   main: orange[500]
-        // }
+        primary: cyan,
+        secondary: orange
+      }
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.primary.main,
+          fontSize: '0.875rem'
+        })
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          'color': theme.palette.primary.main,
+          'fontSize': '0.875rem',
+          '.MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.primary.light
+          },
+          '&:hover': {
+            '.MuiOutlinedInput-notchedOutline': {
+              borderColor: theme.palette.primary.main
+            }
+          },
+          '& fieldset': {
+            borderWidth: '1px !important'
+          } //unbold the search box when searching
+        })
       }
     }
   }
