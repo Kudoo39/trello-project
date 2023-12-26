@@ -6,20 +6,20 @@ const theme = extendTheme({
     appBarHeight: '58px',
     boardBarHeight: '58px'
   },
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: blue,
-        secondary: pink
-      }
-    },
-    dark: {
-      palette: {
-        primary: cyan,
-        secondary: orange
-      }
-    }
-  },
+  // colorSchemes: {
+  //   light: {
+  //     palette: {
+  //       primary: blue,
+  //       secondary: pink
+  //     }
+  //   },
+  //   dark: {
+  //     palette: {
+  //       primary: cyan,
+  //       secondary: orange
+  //     }
+  //   }
+  // },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -29,11 +29,11 @@ const theme = extendTheme({
             height: '8px'
           },
           '*::-webkit-scrollbar-thumb': {
-            backgroundColor: '#bdc3c7',
+            backgroundColor: '#dcdde1',
             borderRadius: '8px'
           },
           '*::-webkit-scrollbar-thumb:hover': {
-            backgroundColor: 'DodgerBlue',
+            backgroundColor: 'white',
             borderRadius: '8px'
           }
         }
@@ -49,7 +49,7 @@ const theme = extendTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: ({ theme }) => ({
-          color: theme.palette.primary.main,
+          // color: theme.palette.primary.main,
           fontSize: '0.875rem'
         })
       }
@@ -57,16 +57,16 @@ const theme = extendTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({
-          'color': theme.palette.primary.main,
+          // 'color': theme.palette.primary.main,
           'fontSize': '0.875rem',
-          '.MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.primary.light
-          }, //color the outline search box
-          '&:hover': {
-            '.MuiOutlinedInput-notchedOutline': {
-              borderColor: theme.palette.primary.main
-            }
-          },
+          // '.MuiOutlinedInput-notchedOutline': {
+          //   borderColor: theme.palette.primary.light
+          // }, //color the outline search box
+          // '&:hover': {
+          //   '.MuiOutlinedInput-notchedOutline': {
+          //     borderColor: theme.palette.primary.main
+          //   }
+          // },
           '& fieldset': {
             borderWidth: '1px !important'
           } //unbold the search box when searching
