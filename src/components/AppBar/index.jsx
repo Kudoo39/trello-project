@@ -28,15 +28,16 @@ const AppBar = () => {
     <div>
       <Box
         sx={{
-          width: '100%',
-          height: (e) => e.trello.appBarHeight,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 2,
-          paddingX: 2,
-          overflowX: 'auto',
-          backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0')
+          'width': '100%',
+          'height': (e) => e.trello.appBarHeight,
+          'display': 'flex',
+          'alignItems': 'center',
+          'justifyContent': 'space-between',
+          'gap': 2,
+          'paddingX': 2,
+          'overflowX': 'auto',
+          'backgroundColor': (theme) => (theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0'),
+          '&::-webkit-scrollbar-track': { m: 2 }
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
