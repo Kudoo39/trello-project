@@ -24,16 +24,17 @@ const BoardBar = () => {
   return (
     <Box
       sx={{
-        width: '100%',
-        height: (e) => e.trello.boardBarHeight,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 2,
-        paddingX: 2,
-        overflowX: 'auto',
-        backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
-        borderBottom: '1px solid white'
+        'width': '100%',
+        'height': (e) => e.trello.boardBarHeight,
+        'display': 'flex',
+        'alignItems': 'center',
+        'justifyContent': 'space-between',
+        'gap': 2,
+        'paddingX': 2,
+        'overflowX': 'auto',
+        'backgroundColor': (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
+        'borderBottom': '1px solid white',
+        '&::-webkit-scrollbar-track': { m: 2 }
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
