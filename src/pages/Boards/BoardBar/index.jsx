@@ -10,7 +10,7 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import { Button, Tooltip } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-const Menu_Style = {
+const MENU_STYLE = {
   'color': 'white',
   'backgroundColor': 'transparent',
   'border': 'none',
@@ -37,11 +37,11 @@ const BoardBar = () => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Chip sx={Menu_Style} icon={<DashboardIcon />} label="Dashboard" clickable />
-        <Chip sx={Menu_Style} icon={<VpnLockIcon />} label="Public/Private Workspace" clickable />
-        <Chip sx={Menu_Style} icon={<AddToDriveIcon />} label="Add to Google Drive" clickable />
-        <Chip sx={Menu_Style} icon={<BoltIcon />} label="Automation" clickable />
-        <Chip sx={Menu_Style} icon={<FilterListIcon />} label="Filters" clickable />
+        <Chip sx={MENU_STYLE} icon={<DashboardIcon />} label="Dashboard" clickable />
+        <Chip sx={MENU_STYLE} icon={<VpnLockIcon />} label="Public/Private Workspace" clickable />
+        <Chip sx={MENU_STYLE} icon={<AddToDriveIcon />} label="Add to Google Drive" clickable />
+        <Chip sx={MENU_STYLE} icon={<BoltIcon />} label="Automation" clickable />
+        <Chip sx={MENU_STYLE} icon={<FilterListIcon />} label="Filters" clickable />
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -54,7 +54,18 @@ const BoardBar = () => {
         </Button>
         <AvatarGroup
           max={6}
-          sx={{ 'gap': '10px', '& .MuiAvatar-root': { width: 34, height: 34, fontSize: 16, border: 'none' } }}
+          sx={{
+            'gap': '10px',
+            '& .MuiAvatar-root': {
+              width: 34,
+              height: 34,
+              fontSize: 16,
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              backgroundColor: '#A9A9A9'
+            }
+          }}
         >
           <Tooltip title="Khang Nguyen">
             <Avatar
