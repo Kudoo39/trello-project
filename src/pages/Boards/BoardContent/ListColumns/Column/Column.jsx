@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import ListCards from './ListCards/ListCards'
 
-const Column = () => {
+const Column = ({ column }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => setAnchorEl(event.currentTarget)
@@ -49,7 +49,7 @@ const Column = () => {
           }}
         >
           <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer' }}>
-            Column Title
+            {column?.title}
           </Typography>
           <Box>
             <Tooltip title="More options">
@@ -115,7 +115,7 @@ const Column = () => {
         </Box>
 
         {/* List Card */}
-        <ListCards />
+        <ListCards cards={column?.cards} />
 
         {/* Card Footer */}
         <Box

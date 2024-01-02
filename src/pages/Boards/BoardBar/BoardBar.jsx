@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import { Button, Tooltip } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import { capitalizeFirstLetter } from '~/utils/formatters'
 
 const MENU_STYLE = {
   'color': 'white',
@@ -20,7 +21,7 @@ const MENU_STYLE = {
   '&:hover': { backgroundColor: 'primary.50' }
 }
 
-const BoardBar = () => {
+const BoardBar = ({ board }) => {
   return (
     <Box
       sx={{
@@ -37,8 +38,8 @@ const BoardBar = () => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Chip sx={MENU_STYLE} icon={<DashboardIcon />} label="Dashboard" clickable />
-        <Chip sx={MENU_STYLE} icon={<VpnLockIcon />} label="Public/Private Workspace" clickable />
+        <Chip sx={MENU_STYLE} icon={<DashboardIcon />} label={board?.title} clickable />
+        <Chip sx={MENU_STYLE} icon={<VpnLockIcon />} label={capitalizeFirstLetter(board?.type)} clickable />
         <Chip sx={MENU_STYLE} icon={<AddToDriveIcon />} label="Add to Google Drive" clickable />
         <Chip sx={MENU_STYLE} icon={<BoltIcon />} label="Automation" clickable />
         <Chip sx={MENU_STYLE} icon={<FilterListIcon />} label="Filters" clickable />
