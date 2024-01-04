@@ -71,7 +71,7 @@ const BoardBar = ({ board }) => {
           <Tooltip title="Khang Nguyen">
             <Avatar
               alt="Khang Nguyen"
-              src="https://scontent.fqlf1-2.fna.fbcdn.net/v/t39.30808-6/292081393_1462365124280298_8364607458906654170_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=Sji6bUizyi4AX-gEsLP&_nc_ht=scontent.fqlf1-2.fna&oh=00_AfBCJkUKwfrF5eNh_9Z6IjEM1ljAzEJkJ5Ce_J7esaxlQQ&oe=6588D17A"
+              src="https://raw.githubusercontent.com/Kudoo39/react-portfolio/main/public/npdk.jpg"
             />
           </Tooltip>
           <Tooltip title="Cry Cat">

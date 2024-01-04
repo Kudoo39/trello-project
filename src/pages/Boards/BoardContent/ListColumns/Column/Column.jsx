@@ -28,6 +28,8 @@ const Column = ({ column }) => {
     data: { ...column }
   })
   const dndKitColumnStyles = {
+    //for pointerSensor
+    //touchAction: 'none',
     //https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition
