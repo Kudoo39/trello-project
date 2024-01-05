@@ -2,7 +2,7 @@
 
 Welcome to the Trello Clone repository! This project is a practical web application designed to mimic the functionality of Trello, providing users with a powerful tool for managing tasks and projects.
 
-![Trello Clone App Screenshot](public/trello-clone.png)
+![Trello Clone App Screenshot](public/trello.png)
 
 ## Features
 
