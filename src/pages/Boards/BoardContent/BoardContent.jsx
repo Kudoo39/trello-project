@@ -27,7 +27,6 @@ const BoardContent = ({ board }) => {
   }, [board])
 
   const handleDragEnd = (event) => {
-    console.log(event)
     const { active, over } = event
 
     if (!over) return

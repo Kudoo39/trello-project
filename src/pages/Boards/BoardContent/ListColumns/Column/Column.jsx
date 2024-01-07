@@ -32,7 +32,8 @@ const Column = ({ column }) => {
     //touchAction: 'none',
     //https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
-    transition
+    transition,
+    height: '100%'
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -43,12 +44,9 @@ const Column = ({ column }) => {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
 
   return (
-    <>
+    <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       {/* Column 1 */}
       <Box
-        ref={setNodeRef}
-        style={dndKitColumnStyles}
-        {...attributes}
         {...listeners}
         sx={{
           minWidth: '300px',
@@ -155,7 +153,7 @@ const Column = ({ column }) => {
           </Tooltip>
         </Box>
       </Box>
-    </>
+    </div>
   )
 }
 
