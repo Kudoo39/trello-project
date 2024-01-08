@@ -12,7 +12,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 const Card = ({ card }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
     data: { ...card }
   })
@@ -21,7 +21,8 @@ const Card = ({ card }) => {
     //touchAction: 'none',
     //https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
-    transition
+    transition,
+    opacity: isDragging ? 0.5 : undefined
   }
 
   const shouldShowCardAction = () => {

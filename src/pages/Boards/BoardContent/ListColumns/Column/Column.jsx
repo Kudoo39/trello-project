@@ -23,7 +23,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 const Column = ({ column }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
   })
@@ -33,7 +33,9 @@ const Column = ({ column }) => {
     //https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition,
-    height: '100%'
+    //height 100% to fix flickering drag, for example, some columns has more height than others, causing some bugs when draggings
+    height: '100%',
+    opacity: isDragging ? 0.5 : undefined
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -47,6 +49,7 @@ const Column = ({ column }) => {
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       {/* Column 1 */}
       <Box
+        //if listeners are put in div, the whole column (the below part of culumns) can be dragged as well. Mobile users can not scroll horizontal, they will drag instead
         {...listeners}
         sx={{
           minWidth: '300px',
