@@ -17,6 +17,7 @@ Welcome to the Trello Clone repository! This project is a practical web applicat
 - JavaScript
 - React
 - Material-UI
+- dnd-kit
 
 ## Project Status
 
