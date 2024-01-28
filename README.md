@@ -14,10 +14,17 @@ Welcome to the Trello Clone repository! This project is a practical web applicat
 
 ## Technologies Used
 
-- JavaScript
-- React
-- Material-UI
-- dnd-kit
+- **Frontend:**
+  - JavaScript
+  - React
+  - Material-UI
+  - dnd-kit (for drag-and-drop functionality)
+
+- **Backend:**
+  - (To be implemented in the future)
+
+- **Database:**
+  - MongoDB (for storing board, list, and card data)
 
 ## Project Status
 
