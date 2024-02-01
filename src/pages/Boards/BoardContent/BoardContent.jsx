@@ -45,6 +45,7 @@ const BoardContent = ({ board }) => {
   const [activeDragItemId, setActiveDragItemId] = useState(null)
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
+  const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
 
   useEffect(() => {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
@@ -64,6 +65,11 @@ const BoardContent = ({ board }) => {
       event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN
     )
     setActiveDragItemData(event?.active?.data?.current)
+
+    // only set oldColumn when dragging CARDS
+    if (event?.active?.data?.current?.columnId) {
+      setOldColumnWhenDraggingCard(findColumnByCardId(event?.active?.id))
+    }
   }
 
   //trigger process dragging 1 element
@@ -137,36 +143,85 @@ const BoardContent = ({ board }) => {
     }
   }
 
-  //trigger drop 1 element
+  // trigger drop 1 element
   const handleDragEnd = (event) => {
     // console.log('handleDragEnd: ', event)
-
-    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
-      //console.log('jsut drag card action, do nothing')
-      return
-    }
-
     const { active, over } = event
 
-    //return to avoid errors when drag somewhere out of range
+    // return to avoid errors when drag somewhere out of range
     if (!active || !over) return
 
-    if (active.id !== over.id) {
-      //get position before drag
-      const oldIndex = orderedColumns.findIndex((c) => c._id === active.id)
-      //get position after drop
-      const newIndex = orderedColumns.findIndex((c) => c._id === over.id)
+    // handle cards dragging
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
+      //activeDraggingCard is the card which is being dragged
+      const {
+        id: activeDraggingCardId,
+        data: { current: activeDraggingCardData }
+      } = active
 
-      // https://github.com/clauderic/dnd-kit/blob/master/packages/sortable/src/utilities/arrayMove.ts
-      const dndOrderedColumns = arrayMove(orderedColumns, oldIndex, newIndex)
-      //const dndOrderedColumnsId = dndOrderedColumns.map((c) => c._id)
-      //data for order of column after drag and drop
+      //overCard is the one interact with dragged card
+      const { id: overCardId } = over
 
-      setOrderedColumns(dndOrderedColumns)
+      //find 2 columns based on cardId, for example card from column 3 is dragged to cards in column 2, active -> column 3, over -> column 2
+      const activeColumn = findColumnByCardId(activeDraggingCardId)
+      const overColumn = findColumnByCardId(overCardId)
+
+      //for some reasons, if 1 of the column is not existing, do nothing -> avoid web crashing
+      if (!activeColumn || !overColumn) return
+
+      /*we have to use setActiveColumnData.columnId OR oldColumnWhenDraggingCard (set in handleDragStart)
+      instead of activeColumn._id because the state of activeColumn has been updated once in onDragOver */
+      if (oldColumnWhenDraggingCard._id !== overColumn._id) {
+        //dragging cards between 2 different columns
+      } else {
+        //dragging cards in the same column
+
+        //get position before drag
+        const oldCardIndex = oldColumnWhenDraggingCard?.cards?.findIndex((c) => c._id === activeDragItemId)
+        //get position after drop
+        const newCardIndex = overColumn?.cards?.findIndex((c) => c._id === overCardId)
+
+        //use arrayMove simple because dragging cards in the SAME COLUMN is NO DIFFERENT with dragging columns in the SAME BOARD
+        const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+
+        setOrderedColumns((prevColumns) => {
+          //clone the old OrderColumnState array to handle data then return - update new OrderColumnState
+          const nextColumns = cloneDeep(prevColumns)
+
+          //find the column that we drop (same column anyway)
+          const targetColumn = nextColumns.find((c) => c._id === overColumn._id)
+
+          //update 2 values which are card and cardOrderIds in targetColumn
+          targetColumn.cards = dndOrderedCards
+          targetColumn.cardOrderIds = dndOrderedCards.map((c) => c._id)
+
+          //return new correct state
+          return nextColumns
+        })
+      }
     }
 
+    // handle columns dragging
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+      if (active.id !== over.id) {
+        //get position before drag
+        const oldColumnIndex = orderedColumns.findIndex((c) => c._id === active.id)
+        //get position after drop
+        const newColumnIndex = orderedColumns.findIndex((c) => c._id === over.id)
+
+        // https://github.com/clauderic/dnd-kit/blob/master/packages/sortable/src/utilities/arrayMove.ts
+        const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
+        //const dndOrderedColumnsId = dndOrderedColumns.map((c) => c._id)
+        //data for order of column after drag and drop
+
+        setOrderedColumns(dndOrderedColumns)
+      }
+    }
+
+    // set all data after drag&drop to null default
     setActiveDragItemId(null)
     setActiveDragItemType(null)
+    setActiveDragItemData(null)
     setActiveDragItemData(null)
   }
 
