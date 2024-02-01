@@ -12,7 +12,8 @@ import {
   useSensor,
   useSensors,
   DragOverlay,
-  defaultDropAnimationSideEffects
+  defaultDropAnimationSideEffects,
+  closestCorners
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 
@@ -55,6 +56,7 @@ const BoardContent = ({ board }) => {
     return orderedColumns.find((column) => column.cards.map((card) => card._id)?.includes(cardId))
   }
 
+  //start dragging 1 element
   const handleDragStart = (event) => {
     // console.log('handleDragStart: ', event)
     setActiveDragItemId(event?.active?.id)
@@ -63,6 +65,7 @@ const BoardContent = ({ board }) => {
     )
     setActiveDragItemData(event?.active?.data?.current)
   }
+
   //trigger process dragging 1 element
   const handleDragOver = (event) => {
     //not do anything if drag column; column done already
@@ -134,6 +137,7 @@ const BoardContent = ({ board }) => {
     }
   }
 
+  //trigger drop 1 element
   const handleDragEnd = (event) => {
     // console.log('handleDragEnd: ', event)
 
@@ -178,7 +182,14 @@ const BoardContent = ({ board }) => {
   }
 
   return (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      //algorithm to detect collision, use to fix when drag card with media, it's not working.
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
       <Box
         sx={{
           backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
