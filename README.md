@@ -21,7 +21,7 @@ Welcome to the Trello Clone repository! This project is a practical web applicat
   - dnd-kit (for drag-and-drop functionality)
 
 - **Backend:**
-  - (To be implemented in the future)
+  - Nodejs / Expressjs
 
 - **Database:**
   - MongoDB (for storing board, list, and card data)
