@@ -57,6 +57,62 @@ const BoardContent = ({ board }) => {
     return orderedColumns.find((column) => column.cards.map((card) => card._id)?.includes(cardId))
   }
 
+  //utility function to update state again after moving cards between different columns
+  const moveCardBetweenDifferentColumns = (
+    overColumn,
+    overCardId,
+    active,
+    over,
+    activeColumn,
+    activeDraggingCardId,
+    activeDraggingCardData
+  ) => {
+    setOrderedColumns((prevColumns) => {
+      //find the place (index) of the card is about to be dropped in the destination column
+      const overCardIndex = overColumn?.cards?.findIndex((card) => card._id === overCardId)
+
+      //logic to find "new cardIndex" (on top or below the overCard)
+      const isBelowOverItem =
+        active.rect.current.translated && active.rect.current.translated.top > over.rect.top + over.rect.height
+      const modifier = isBelowOverItem ? 1 : 0
+
+      let newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1
+
+      //clone the old OrderColumnState array to handle data then return - update new OrderColumnState
+      const nextColumns = cloneDeep(prevColumns)
+      const nextActiveColumn = nextColumns.find((column) => column._id === activeColumn._id)
+      const nextOverColumn = nextColumns.find((column) => column._id === overColumn._id)
+
+      if (nextActiveColumn) {
+        /*delete the card in active column, of course! Imagine you move your wallet from the left pocket to the right pocket,
+           guess what happen? WOW! The wallet in your left pocket somehow disappear?!?!?!*/
+        nextActiveColumn.cards = nextActiveColumn.cards.filter((card) => card._id !== activeDraggingCardId)
+
+        //update the cardOrderIds in the activeColumn after removing the card.
+        nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map((card) => card._id)
+      }
+
+      if (nextOverColumn) {
+        //check if this dragged card exist in overColumn, if then, erase that card
+        nextOverColumn.cards = nextOverColumn.cards.filter((card) => card._id !== activeDraggingCardId)
+
+        /* update the correct data after dragging cards between 2 columns, fix bug when dragging
+          cards to another column but the activeDragCardId still show the old columnId */
+        const rebuilt_activeDraggingCardData = {
+          ...activeDraggingCardData,
+          columnId: nextOverColumn._id
+        }
+        //add the dragged card to the overColumn in the new index place
+        nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuilt_activeDraggingCardData)
+
+        //update the cardOrderIds in the overColumn after adding the card.
+        nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
+      }
+
+      return nextColumns
+    })
+  }
+
   //start dragging 1 element
   const handleDragStart = (event) => {
     // console.log('handleDragStart: ', event)
@@ -102,44 +158,15 @@ const BoardContent = ({ board }) => {
 
     //the logic here is dragging cards between 2 different columns
     if (activeColumn._id !== overColumn._id) {
-      setOrderedColumns((prevColumns) => {
-        //find the place (index) of the card is about to be dropped in the destination column
-        const overCardIndex = overColumn?.cards?.findIndex((card) => card._id === overCardId)
-
-        //logic to find "new cardIndex" (on top or below the overCard)
-        const isBelowOverItem =
-          active.rect.current.translated && active.rect.current.translated.top > over.rect.top + over.rect.height
-        const modifier = isBelowOverItem ? 1 : 0
-
-        let newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1
-
-        //clone the old OrderColumnState array to handle data then return - update new OrderColumnState
-        const nextColumns = cloneDeep(prevColumns)
-        const nextActiveColumn = nextColumns.find((column) => column._id === activeColumn._id)
-        const nextOverColumn = nextColumns.find((column) => column._id === overColumn._id)
-
-        if (nextActiveColumn) {
-          /*delete the card in active column, of course! Imagine you move your wallet from the left pocket to the right pocket,
-           guess what happen? WOW! The wallet in your left pocket somehow disappear?!?!?!*/
-          nextActiveColumn.cards = nextActiveColumn.cards.filter((card) => card._id !== activeDraggingCardId)
-
-          //update the cardOrderIds in the activeColumn after removing the card.
-          nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map((card) => card._id)
-        }
-
-        if (nextOverColumn) {
-          //check if this dragged card exist in overColumn, if then, erase that card
-          nextOverColumn.cards = nextOverColumn.cards.filter((card) => card._id !== activeDraggingCardId)
-
-          //add the dragged card to the overColumn in the new index place
-          nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
-
-          //update the cardOrderIds in the overColumn after adding the card.
-          nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
-        }
-
-        return nextColumns
-      })
+      moveCardBetweenDifferentColumns(
+        overColumn,
+        overCardId,
+        active,
+        over,
+        activeColumn,
+        activeDraggingCardId,
+        activeDraggingCardData
+      )
     }
   }
 
@@ -173,6 +200,15 @@ const BoardContent = ({ board }) => {
       instead of activeColumn._id because the state of activeColumn has been updated once in onDragOver */
       if (oldColumnWhenDraggingCard._id !== overColumn._id) {
         //dragging cards between 2 different columns
+        moveCardBetweenDifferentColumns(
+          overColumn,
+          overCardId,
+          active,
+          over,
+          activeColumn,
+          activeDraggingCardId,
+          activeDraggingCardData
+        )
       } else {
         //dragging cards in the same column
 
