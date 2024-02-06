@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { cloneDeep } from 'lodash'
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
@@ -6,14 +6,17 @@ import { mapOrder } from '~/utils/sorts'
 
 import {
   DndContext,
-  PointerSensor,
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
   defaultDropAnimationSideEffects,
-  closestCorners
+  closestCorners,
+  closestCenter,
+  pointerWithin,
+  rectIntersection,
+  getFirstCollision
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 
@@ -46,6 +49,9 @@ const BoardContent = ({ board }) => {
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
+
+  //the last point of collision
+  const lastOverId = useRef(null)
 
   useEffect(() => {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
@@ -262,7 +268,7 @@ const BoardContent = ({ board }) => {
   }
 
   //when drop, the shadow does not disappear immediately
-  const dropAnimation = {
+  const customDropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
       styles: {
         active: {
@@ -272,11 +278,55 @@ const BoardContent = ({ board }) => {
     })
   }
 
+  //customize the collision detection algorithm to optimize drag&drop cards between multiple columns
+  //return an array
+  const collisionDetectionStrategy = useCallback(
+    (args) => {
+      if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+        return closestCorners({ ...args })
+      }
+
+      //find the intersection point, collision
+      const pointerIntersections = pointerWithin(args)
+      //algorithm to detect collision and return an array of those collisions
+      // eslint-disable-next-line no-extra-boolean-cast
+      const intersections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
+
+      //find the first overId in those intersections
+      let overId = getFirstCollision(intersections, 'id')
+      if (overId) {
+        //fix flickering bugs here
+        /*if the overId is column (not card yet) here (overId will touch column first, then the card inside that column),
+        find the closest card using closestCenter or closestCorner */
+        const checkColumn = orderedColumns.find((column) => column._id === overId)
+        if (checkColumn) {
+          //now if the dragged card overId get to columnId, it will return cardId anyway -> no more flickering
+          overId = closestCenter({
+            ...args,
+            droppableContainers: args.droppableContainers.filter((container) => {
+              return container.id !== overId && checkColumn?.cardOrderIds.includes(container.id)
+            })
+          })[0]?.id
+        }
+
+        lastOverId.current = overId
+        return [{ id: overId }]
+      }
+
+      return lastOverId.current ? [{ id: lastOverId.current }] : []
+    },
+    [activeDragItemType, orderedColumns]
+  )
+
   return (
     <DndContext
       sensors={sensors}
       //algorithm to detect collision, use to fix when drag card with media, it's not working.
-      collisionDetection={closestCorners}
+
+      // collisionDetection={closestCorners}
+
+      //using only closestCorners will cause flickering bugs -> custom collision detection algorithm
+      collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
@@ -292,7 +342,7 @@ const BoardContent = ({ board }) => {
       >
         <ListColumns columns={orderedColumns} />
         {/* shadow when dragging */}
-        <DragOverlay dropAnimation={dropAnimation}>
+        <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}
           {activeDragItemId && activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
             <Column column={activeDragItemData} />
