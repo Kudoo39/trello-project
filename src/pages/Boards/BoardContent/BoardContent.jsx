@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOrder } from '~/utils/sorts'
+import { generatePlaceholderCard } from '~/utils/formatters'
 
 import {
   DndContext,
@@ -95,6 +96,10 @@ const BoardContent = ({ board }) => {
            guess what happen? WOW! The wallet in your left pocket somehow disappear?!?!?!*/
         nextActiveColumn.cards = nextActiveColumn.cards.filter((card) => card._id !== activeDraggingCardId)
 
+        //add another Placeholder Card if the column is empty, the last card is dragged into another folder
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
         //update the cardOrderIds in the activeColumn after removing the card.
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map((card) => card._id)
       }
@@ -112,10 +117,12 @@ const BoardContent = ({ board }) => {
         //add the dragged card to the overColumn in the new index place
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuilt_activeDraggingCardData)
 
+        //remove the Placeholder Card if it exists
+        nextOverColumn.cards = nextOverColumn.cards.filter((card) => !card.FE_PlaceholderCard)
+
         //update the cardOrderIds in the overColumn after adding the card.
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
       }
-
       return nextColumns
     })
   }
