@@ -27,7 +27,7 @@ const Card = ({ card }) => {
   }
 
   const shouldShowCardAction = () => {
-    return !!card?.memberIds.length || !!card?.comments.length || !!card?.attachments.length
+    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
   }
   return (
     <MuiCard
@@ -35,7 +35,14 @@ const Card = ({ card }) => {
       style={dndKitCardStyles}
       {...attributes}
       {...listeners}
-      sx={{ cursor: 'pointer', boxShadow: '0 1px 1px rgba(0,0,0,0.2)', overflow: 'unset' }}
+      sx={{
+        cursor: 'pointer',
+        boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
+        overflow: 'unset',
+        display: card?.FE_PlaceholderCard ? 'none' : 'block'
+        //overflow: card?.FE_PlaceholderCard ? 'hidden' : 'unset'
+        //height: card?.FE_PlaceholderCard ? '0px' : 'unset'
+      }}
     >
       {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} />}
       <CardContent sx={{ 'p': 1.5, '&:last-child': { p: 1.5 } }}>

@@ -6,7 +6,7 @@ export const mockData = {
     type: 'public', // 'private'
     ownerIds: [], // admin users
     memberIds: [], // member users
-    columnOrderIds: ['column-id-01', 'column-id-02', 'column-id-03'],
+    columnOrderIds: ['column-id-01', 'column-id-02', 'column-id-03', 'column-id-04'],
     columns: [
       {
         _id: 'column-id-01',
@@ -181,6 +181,23 @@ export const mockData = {
             memberIds: [],
             comments: [],
             attachments: []
+          }
+        ]
+      },
+      {
+        _id: 'column-id-04',
+        boardId: 'board-id-01',
+        title: 'Empty Column 04',
+        /*create an special card which is Placeholder Card, not related to Back-end.
+        This card will be hidden in UI -> use to fix card cannot drag&drop in empty columns
+        -> fix dnd-kit library*/
+        cardOrderIds: ['column-id-04-placeholder-card'],
+        cards: [
+          {
+            _id: 'column-id-04-placeholder-card',
+            boardId: 'board-id-01',
+            columnId: 'column-id-04',
+            FE_PlaceholderCard: true
           }
         ]
       }
