@@ -6,6 +6,7 @@ import { mapOrder } from '~/utils/sorts'
 
 import {
   DndContext,
+  // PointerSensor,
   MouseSensor,
   TouchSensor,
   useSensor,
@@ -13,9 +14,9 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects,
   closestCorners,
-  closestCenter,
+  // closestCenter,
   pointerWithin,
-  rectIntersection,
+  // rectIntersection,
   getFirstCollision
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
@@ -288,12 +289,16 @@ const BoardContent = ({ board }) => {
 
       //find the intersection point, collision
       const pointerIntersections = pointerWithin(args)
-      //algorithm to detect collision and return an array of those collisions
-      // eslint-disable-next-line no-extra-boolean-cast
-      const intersections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
+      /*if the pointerIntersections is an empty array, which mean when
+       users drag cards to somewhere not valid -> do nothing, just return */
+      if (!pointerIntersections?.length) return
 
-      //find the first overId in those intersections
-      let overId = getFirstCollision(intersections, 'id')
+      // //algorithm to detect collision and return an array of those collisions
+      // // eslint-disable-next-line no-extra-boolean-cast
+      // const intersections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
+
+      //find the first overId in those pointerIntersections
+      let overId = getFirstCollision(pointerIntersections, 'id')
       if (overId) {
         //fix flickering bugs here
         /*if the overId is column (not card yet) here (overId will touch column first, then the card inside that column),
@@ -301,7 +306,7 @@ const BoardContent = ({ board }) => {
         const checkColumn = orderedColumns.find((column) => column._id === overId)
         if (checkColumn) {
           //now if the dragged card overId get to columnId, it will return cardId anyway -> no more flickering
-          overId = closestCenter({
+          overId = closestCorners({
             ...args,
             droppableContainers: args.droppableContainers.filter((container) => {
               return container.id !== overId && checkColumn?.cardOrderIds.includes(container.id)
