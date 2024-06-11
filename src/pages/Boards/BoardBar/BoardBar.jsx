@@ -91,7 +91,7 @@ const BoardBar = ({ board }) => {
           <Tooltip title="Angry Cat">
             <Avatar
               alt="Angry Cat"
-              src="https://th.bing.com/th/id/R.f6ef74566d27d815b1516b6360269897?rik=DwgmQ0B58NvMyQ&pid=ImgRaw&r=0"
+              src="https://i.imgur.com/hahqYwF.jpeg"
             />
           </Tooltip>
           <Tooltip title="Cool Cat">
