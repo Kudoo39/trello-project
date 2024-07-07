@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import Cloud from '@mui/icons-material/Cloud'
 import ContentCopy from '@mui/icons-material/ContentCopy'
@@ -53,6 +54,7 @@ const Column = ({ column }) => {
 
   const addNewCard = () => {
     if (!newCardTitle) {
+      toast.error('Please enter Card title!', { position: 'bottom-right' })
       return
     }
     toggleOpenNewCardForm()
