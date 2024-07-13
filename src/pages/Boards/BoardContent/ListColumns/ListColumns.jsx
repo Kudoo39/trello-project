@@ -9,22 +9,29 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 
-const ListColumns = ({ columns }) => {
+const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const [newColumnTitle, setNewColumnTitle] = useState('')
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column title!')
       return
     }
+
+    const newColumnData = {
+      title: newColumnTitle
+    }
+
+    await createNewColumn(newColumnData)
+
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
   }
 
   return (
-    //https://github.com/clauderic/dnd-kit/issues/183#issuecomment-812569512
+    // https://github.com/clauderic/dnd-kit/issues/183#issuecomment-812569512
     <SortableContext items={columns?.map((c) => c._id)} strategy={horizontalListSortingStrategy}>
       <Box
         sx={{
@@ -37,7 +44,7 @@ const ListColumns = ({ columns }) => {
         }}
       >
         {columns?.map((column) => (
-          <Column key={column._id} column={column} />
+          <Column key={column._id} column={column} createNewCard={createNewCard}/>
         ))}
         {!openNewColumnForm
           ? <Box onClick={toggleOpenNewColumnForm} sx={{
