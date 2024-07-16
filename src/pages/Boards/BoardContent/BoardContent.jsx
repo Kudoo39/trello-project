@@ -31,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-const BoardContent = ({ board, createNewColumn, createNewCard }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   //need to set CSS touch-action to none if using pointerSensor, because of conflicting in CSS
   //const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -262,9 +262,11 @@ const BoardContent = ({ board, createNewColumn, createNewCard }) => {
 
         // https://github.com/clauderic/dnd-kit/blob/master/packages/sortable/src/utilities/arrayMove.ts
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-        //const dndOrderedColumnsId = dndOrderedColumns.map((c) => c._id)
-        //data for order of column after drag and drop
 
+        // from _id.jsx
+        moveColumns(dndOrderedColumns)
+
+        // update state to avoid flickering or delay in UI when drag & drop columns, there is a small delay to call API
         setOrderedColumns(dndOrderedColumns)
       }
     }
