@@ -30,7 +30,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, moveCardSameColumn }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, moveCardSameColumn, moveCardDifferentColumn }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   //need to set CSS touch-action to none if using pointerSensor, because of conflicting in CSS
   //const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -74,7 +74,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    triggerFrom
   ) => {
     setOrderedColumns((prevColumns) => {
       //find the place (index) of the card is about to be dropped in the destination column
@@ -124,6 +125,13 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
         //update the cardOrderIds in the overColumn after adding the card.
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
       }
+
+      // function handleDragEnd is called only after dropping, then call API here once
+      // from _id.jsx
+      if (triggerFrom === 'handleDragEnd') {
+        moveCardDifferentColumn(activeDraggingCardId, oldColumnWhenDraggingCard._id, nextOverColumn._id, nextColumns)
+      }
+
       return nextColumns
     })
   }
@@ -180,7 +188,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        'handleDragOver'
       )
     }
   }
@@ -222,7 +231,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          'handleDragEnd'
         )
       } else {
         //dragging cards in the same column
