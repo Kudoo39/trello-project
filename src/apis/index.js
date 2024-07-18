@@ -21,10 +21,28 @@ export const updateBoardDetailsAPI = async (boardId, updatedBoard) => {
   }
 }
 
+export const moveCardToDifferentColumnAPI = async (updateData) => {
+  try {
+    const response = await axios.put(`${API_ROOT}/v1/boards/supports/moving_card`, updateData)
+    return response.data
+  } catch (error) {
+    return error
+  }
+}
+
 // Column
 export const createNewColumnAPI = async (newColumnData) => {
   try {
     const response = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
+    return response.data
+  } catch (error) {
+    return error
+  }
+}
+
+export const updateColumnDetailsAPI = async (columnId, updatedColumn) => {
+  try {
+    const response = await axios.put(`${API_ROOT}/v1/columns/${columnId}`, updatedColumn)
     return response.data
   } catch (error) {
     return error

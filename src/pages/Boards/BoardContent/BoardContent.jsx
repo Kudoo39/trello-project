@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { cloneDeep, isEmpty } from 'lodash'
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
-import { mapOrder } from '~/utils/sorts'
 import { generatePlaceholderCard } from '~/utils/formatters'
 
 import {
@@ -31,7 +30,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, moveCardSameColumn, moveCardDifferentColumn }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   //need to set CSS touch-action to none if using pointerSensor, because of conflicting in CSS
   //const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -57,7 +56,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
   const lastOverId = useRef(null)
 
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+    // arrange columns order already in _id.jsx
+    setOrderedColumns(board.columns)
   }, [board])
 
   //find the column based on cardId
@@ -74,7 +74,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    triggerFrom
   ) => {
     setOrderedColumns((prevColumns) => {
       //find the place (index) of the card is about to be dropped in the destination column
@@ -124,6 +125,13 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
         //update the cardOrderIds in the overColumn after adding the card.
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
       }
+
+      // function handleDragEnd is called only after dropping, then call API here once
+      // from _id.jsx
+      if (triggerFrom === 'handleDragEnd') {
+        moveCardDifferentColumn(activeDraggingCardId, oldColumnWhenDraggingCard._id, nextOverColumn._id, nextColumns)
+      }
+
       return nextColumns
     })
   }
@@ -180,7 +188,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        'handleDragOver'
       )
     }
   }
@@ -222,7 +231,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          'handleDragEnd'
         )
       } else {
         //dragging cards in the same column
@@ -234,6 +244,7 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
 
         //use arrayMove simple because dragging cards in the SAME COLUMN is NO DIFFERENT with dragging columns in the SAME BOARD
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+        const dndOrderedCardIds = dndOrderedCards.map((c) => c._id)
 
         setOrderedColumns((prevColumns) => {
           //clone the old OrderColumnState array to handle data then return - update new OrderColumnState
@@ -244,11 +255,14 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
 
           //update 2 values which are card and cardOrderIds in targetColumn
           targetColumn.cards = dndOrderedCards
-          targetColumn.cardOrderIds = dndOrderedCards.map((c) => c._id)
+          targetColumn.cardOrderIds = dndOrderedCardIds
 
           //return new correct state
           return nextColumns
         })
+
+        // from _id.jsx
+        moveCardSameColumn(dndOrderedCards, dndOrderedCardIds, oldColumnWhenDraggingCard._id)
       }
     }
 
@@ -263,11 +277,11 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
         // https://github.com/clauderic/dnd-kit/blob/master/packages/sortable/src/utilities/arrayMove.ts
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
 
-        // from _id.jsx
-        moveColumns(dndOrderedColumns)
-
         // update state to avoid flickering or delay in UI when drag & drop columns, there is a small delay to call API
         setOrderedColumns(dndOrderedColumns)
+
+        // from _id.jsx
+        moveColumns(dndOrderedColumns)
       }
     }
 
