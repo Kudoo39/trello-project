@@ -23,8 +23,9 @@ import CloseIcon from '@mui/icons-material/Close'
 
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useConfirm } from 'material-ui-confirm'
 
-const Column = ({ column, createNewCard }) => {
+const Column = ({ column, createNewCard, deleteColumnDetails }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
@@ -67,6 +68,17 @@ const Column = ({ column, createNewCard }) => {
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
+  }
+
+  const confirmDeleteColumn = useConfirm()
+  const removeColumn = () => {
+    confirmDeleteColumn({
+      title: 'Remove this Column',
+      description: 'Remove this Column and its Cards?',
+      confirmationText: 'Confirm'
+    }).then(() => {
+      deleteColumnDetails(column._id)
+    }).catch(() => {})
   }
 
   return (
@@ -114,13 +126,16 @@ const Column = ({ column, createNewCard }) => {
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
+              onClick={handleClose}
               MenuListProps={{
                 'aria-labelledby': 'basic-column-dropdown'
               }}
             >
-              <MenuItem>
+              <MenuItem
+                onClick={toggleOpenNewCardForm}
+                sx={{ '&:hover': { color: 'success.light', '& .add-card-icon': { color: 'success.light' } } }}>
                 <ListItemIcon>
-                  <AddCardIcon fontSize="small" />
+                  <AddCardIcon className="add-card-icon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Add a new card</ListItemText>
               </MenuItem>
@@ -145,9 +160,11 @@ const Column = ({ column, createNewCard }) => {
 
               <Divider />
 
-              <MenuItem>
+              <MenuItem
+                onClick={removeColumn}
+                sx={{ '&:hover': { color: 'warning.dark', '& .delete-icon': { color: 'warning.dark' } } }}>
                 <ListItemIcon>
-                  <DeleteIcon fontSize="small" />
+                  <DeleteIcon className="delete-icon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Remove this column</ListItemText>
               </MenuItem>
