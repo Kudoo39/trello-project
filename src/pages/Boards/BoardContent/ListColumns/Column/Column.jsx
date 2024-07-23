@@ -139,24 +139,6 @@ const Column = ({ column, createNewCard, deleteColumnDetails }) => {
                 </ListItemIcon>
                 <ListItemText>Add a new card</ListItemText>
               </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <ContentCut fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Cut</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <ContentCopy fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Copy</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <ContentPaste fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Paste</ListItemText>
-              </MenuItem>
 
               <Divider />
 
@@ -167,12 +149,6 @@ const Column = ({ column, createNewCard, deleteColumnDetails }) => {
                   <DeleteIcon className="delete-icon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Remove this column</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <Cloud fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Archive this column</ListItemText>
               </MenuItem>
             </Menu>
           </Box>

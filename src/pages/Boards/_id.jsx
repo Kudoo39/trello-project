@@ -141,7 +141,6 @@ const Board = () => {
 
     deleteColumnDetailsAPI(columnId).then(res => {
       toast.success(res?.deleteResult)
-      toast.success(res)
     })
 
   }

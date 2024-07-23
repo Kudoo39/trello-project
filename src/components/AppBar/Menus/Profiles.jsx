@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
+import { handleFutureFeature } from '~/utils/handleFutureFeature'
 
 const Profiles = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -48,26 +49,26 @@ const Profiles = () => {
           'aria-labelledby': 'basic-button-profiles'
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <Avatar sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <Avatar sx={{ width: '28px', height: '28px', mr: 2 }} /> My account
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

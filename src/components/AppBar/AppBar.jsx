@@ -20,6 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
+import { handleFutureFeature } from '~/utils/handleFutureFeature'
 
 const AppBar = () => {
   const [searchValue, setSearchValue] = useState('')
@@ -53,7 +54,7 @@ const AppBar = () => {
             <Recent />
             <Starred />
             <Templates />
-            <Button sx={{ color: 'white' }} startIcon={<LibraryAddIcon />}>
+            <Button sx={{ color: 'white' }} startIcon={<LibraryAddIcon />} onClick={handleFutureFeature}>
               Create
             </Button>
           </Box>
