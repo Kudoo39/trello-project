@@ -12,6 +12,7 @@ import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentPaste from '@mui/icons-material/ContentPaste'
 import Cloud from '@mui/icons-material/Cloud'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { handleFutureFeature } from '~/utils/handleFutureFeature'
 
 const Workspaces = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -45,7 +46,7 @@ const Workspaces = () => {
           'aria-labelledby': 'basic-button-workspaces'
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <ContentCut fontSize="small" />
           </ListItemIcon>
@@ -54,7 +55,7 @@ const Workspaces = () => {
             ⌘X
           </Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <ContentCopy fontSize="small" />
           </ListItemIcon>
@@ -63,7 +64,7 @@ const Workspaces = () => {
             ⌘C
           </Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <ContentPaste fontSize="small" />
           </ListItemIcon>
@@ -73,7 +74,7 @@ const Workspaces = () => {
           </Typography>
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={handleFutureFeature}>
           <ListItemIcon>
             <Cloud fontSize="small" />
           </ListItemIcon>

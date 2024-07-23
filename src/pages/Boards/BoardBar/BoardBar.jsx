@@ -10,6 +10,7 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import { Button, Tooltip } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import { handleFutureFeature } from '~/utils/handleFutureFeature'
 
 const MENU_STYLE = {
   'color': 'white',
@@ -37,7 +38,7 @@ const BoardBar = ({ board }) => {
         '&::-webkit-scrollbar-track': { m: 2 }
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }} onClick={handleFutureFeature}>
         <Tooltip title={board?.description}>
           <Chip sx={MENU_STYLE} icon={<DashboardIcon />} label={board?.title} clickable />
         </Tooltip>
@@ -52,6 +53,7 @@ const BoardBar = ({ board }) => {
           variant="outlined"
           startIcon={<PersonAddIcon />}
           sx={{ 'color': 'white', 'borderColor': 'white', '&:hover': { borderColor: '#bdc3c7' } }}
+          onClick={handleFutureFeature}
         >
           Invite
         </Button>
