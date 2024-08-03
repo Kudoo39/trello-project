@@ -6,7 +6,7 @@ This project is a practical web application designed to mimic the functionality 
 
 ## Backend Part
 
-[Trello API (Backend)](https://github.com/Kudoo39/trello-api)
+Here is the backend part of this project: **[Trello API (Backend)](https://github.com/Kudoo39/trello-api)**
 
 ## Table of Contents
 
@@ -14,6 +14,7 @@ This project is a practical web application designed to mimic the functionality 
 2. [Features](#features)
 3. [Technologies Used](#technologies-used)
 4. [Project Structure](#project-structure)
+5. [Deployment](#deployment)
 
 ## Getting Started
 
@@ -105,3 +106,5 @@ src
  ┗ theme.js
  ```
 
+## Deployment
+- This project was deployed at [https://trelloproject.vercel.app](https://trelloproject.vercel.app) using Vercel.
