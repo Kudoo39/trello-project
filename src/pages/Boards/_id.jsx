@@ -11,7 +11,7 @@ import {
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
   moveCardToDifferentColumnAPI,
-  deleteColumnDetailsAPI,
+  deleteColumnDetailsAPI
 } from '~/apis';
 import { generatePlaceholderCard } from '~/utils/formatters';
 import { isEmpty } from 'lodash';
@@ -22,7 +22,7 @@ import Typography from '@mui/material/Typography';
 import { toast } from 'react-toastify';
 
 const Board = () => {
-  const [board, setBoard] = useState(null);
+  const [board, setBoard] = useState(mockData.board);
   useEffect(() => {
     const boardId = '6655e094b16640acefaafcba';
     fetchBoardDetailsAPI(boardId).then((board) => {
@@ -47,7 +47,7 @@ const Board = () => {
   const createNewColumn = async (newColumnData) => {
     const createdColumn = await createNewColumnAPI({
       ...newColumnData,
-      boardId: board._id,
+      boardId: board._id
     });
 
     // Handle drag & drop when column is empty, when creating a new column
@@ -65,7 +65,7 @@ const Board = () => {
   const createNewCard = async (newCardData) => {
     const createdCard = await createNewCardAPI({
       ...newCardData,
-      boardId: board._id,
+      boardId: board._id
     });
 
     // Update state board
@@ -97,7 +97,7 @@ const Board = () => {
 
     // Call API to update board
     updateBoardDetailsAPI(newBoard._id, {
-      columnOrderIds: newBoard.columnOrderIds,
+      columnOrderIds: newBoard.columnOrderIds
     });
   };
 
@@ -142,7 +142,7 @@ const Board = () => {
       prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find((c) => c._id === nextColumnId)
-        ?.cardOrderIds,
+        ?.cardOrderIds
     });
   };
 
@@ -170,7 +170,7 @@ const Board = () => {
           justifyContent: 'center',
           gap: 2,
           width: '100vw',
-          height: '100vh',
+          height: '100vh'
         }}
       >
         <CircularProgress />
